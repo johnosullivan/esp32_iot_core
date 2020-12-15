@@ -8,6 +8,6 @@ extern "C" {
 
 void app_main(void)
 {   
-    // start the mihome service
+    /* starts the IOT core */
     core::start_core();
 }

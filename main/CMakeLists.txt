@@ -1,8 +1,8 @@
 idf_component_register(
 				SRCS 		"libs/cJSON.c"
 							"libs/ws2812.c"
-							"libs/fmt/src/format.cc"
-							"libs/fmt/src/os.cc"
+							#"libs/fmt/src/format.cc"
+							#"libs/fmt/src/os.cc"
 
 							"main.cpp" 
 							"core/core.cpp" 

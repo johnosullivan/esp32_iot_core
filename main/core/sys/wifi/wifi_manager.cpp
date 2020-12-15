@@ -100,11 +100,11 @@ namespace core::sys::wifi::manager
 	/* @brief When set, means user requested for a disconnect */
 	const int WIFI_MANAGER_REQUEST_DISCONNECT_BIT = BIT8;
 
-	void wifi_manager_scan_async(){
+	void wifi_manager_scan_async() {
 		wifi_manager_send_message(WM_START_WIFI_SCAN, NULL);
 	}
 
-	void wifi_manager_disconnect_async(){
+	void wifi_manager_disconnect_async() {
 		wifi_manager_send_message(WM_DISCONNECT_STA, NULL);
 	}
 
