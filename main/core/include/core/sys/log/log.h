@@ -4,7 +4,7 @@
 #include <mutex>
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-conversion"
-#include "fmt/format.h"
+//#include "fmt/format.h"
 #pragma GCC diagnostic pop
 #include <iostream>
 
@@ -14,6 +14,7 @@
 
 namespace core::sys::log
 {
+    /*
     class Log
     {
         public:
@@ -116,4 +117,5 @@ namespace core::sys::log
                 log(verbose_level, tag, "{}", val);
             }
     };
+    */
 }

@@ -370,7 +370,8 @@ namespace core::sys::wifi::manager
 		ESP_ERROR_CHECK(esp_netif_dhcps_start(esp_netif_ap));
 
 		ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_APSTA));
-		ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &ap_config));
+
+		ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, &ap_config));
 		ESP_ERROR_CHECK(esp_wifi_set_bandwidth(WIFI_IF_AP, wifi_settings.ap_bandwidth));
 		ESP_ERROR_CHECK(esp_wifi_set_ps(wifi_settings.sta_power_save));
 
@@ -448,7 +449,7 @@ namespace core::sys::wifi::manager
 					}
 					else{
 						/* update config to latest and attempt connection */
-						ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, wifi_manager_get_wifi_sta_config()));
+						ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, wifi_manager_get_wifi_sta_config())); //
 						ESP_ERROR_CHECK(esp_wifi_connect());
 					}
 

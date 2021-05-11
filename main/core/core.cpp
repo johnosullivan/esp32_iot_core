@@ -5,6 +5,9 @@
 #include "core/sys/wifi/wifi_manager.h"
 #include "core/application/service/service.h"
 
+#include <driver/i2c.h>
+#include "sdkconfig.h"
+
 using namespace core::sys;
 using namespace core::application;
 using namespace core::sys::ble::manager;
@@ -115,6 +118,26 @@ namespace core
 	    // init the color status white
 	    utils::init_status_led(MIHOME_LED_PIN);
 	    utils::update_status_led(HEX_COLOR_BLACK);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	    // init the nvs and check state
 	    int init_state = init_nvs_state();
