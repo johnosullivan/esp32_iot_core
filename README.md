@@ -1,2 +1,2 @@
-## ESP32 IOT CORE
+## ESP32 IoT Core
 
