@@ -31,7 +31,6 @@ void app_main(void)
     esp_chip_info(&chip_info);
     printf("[Target: %s] - %d CPU Core(s), WiFi%s%s, SR %d, %dMB %s Flash\n", CONFIG_IDF_TARGET, chip_info.cores, (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "", (chip_info.features & CHIP_FEATURE_BLE) ? "/BLE" : "", chip_info.revision, spi_flash_get_chip_size() / (1024 * 1024), (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "Embedded" : "External");
     
-
     /* 
         WiFi Debugging
         wifi_scanner();
