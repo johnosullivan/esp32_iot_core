@@ -1,7 +1,18 @@
 {
   "C_Cpp.intelliSenseEngine": "Tag Parser",
-  "idf.adapterTargetName": "esp32s3",
   "files.associations": {
-    "nvs_flash.h": "c"
-  }
+    "esp_spi_flash.h": "c",
+    "nvs_flash.h": "c",
+    "optional": "c",
+    "istream": "c",
+    "ostream": "c",
+    "ratio": "c",
+    "system_error": "c",
+    "array": "c",
+    "functional": "c",
+    "tuple": "c",
+    "type_traits": "c",
+    "utility": "c"
+  },
+  "idf.adapterTargetName": "esp32s3"
 }

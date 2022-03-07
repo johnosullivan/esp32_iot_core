@@ -24,7 +24,7 @@
 #include "esp_bt_device.h"
 
 static const char *TAG_BT_MG = "mihome_hub_bt_manager";
-uint16_t heart_rate_handle_table[HRS_CONFIG_NB];
+
 #define GATTS_DEMO_CHAR_VAL_LEN_MAX 500
 #define PREPARE_BUF_MAX_SIZE        1024
 #define CHAR_DECLARATION_SIZE       (sizeof(uint8_t))
@@ -124,10 +124,20 @@ static const uint16_t GATTS_CHAR_CONFIG_UUID       = 0xAA05;
 static const uint8_t CHAR_PROP_READ                = ESP_GATT_CHAR_PROP_BIT_READ;
 static const uint8_t CHAR_PROP_READ_WRITE          = ESP_GATT_CHAR_PROP_BIT_READ | ESP_GATT_CHAR_PROP_BIT_WRITE;
 // static const uint8_t CHAR_PROP_READ_WRITE_NOTIFY   = ESP_GATT_CHAR_PROP_BIT_WRITE | ESP_GATT_CHAR_PROP_BIT_READ | ESP_GATT_CHAR_PROP_BIT_NOTIFY;
-static const uint8_t CHAR_PROP_READ_NOTIFY         = ESP_GATT_CHAR_PROP_BIT_READ | ESP_GATT_CHAR_PROP_BIT_NOTIFY;
+//static const uint8_t CHAR_PROP_READ_NOTIFY         = ESP_GATT_CHAR_PROP_BIT_READ | ESP_GATT_CHAR_PROP_BIT_NOTIFY ESP_GATT_CHAR_PROP_BIT_WRITE;
 
 static const uint8_t heart_measurement_ccc[2]      = {0x00, 0x00};
-static const uint8_t char_value[4]                 = {0x11, 0x22, 0x33, 0x44};
+
+
+static const uint8_t char_value[1]                 = {0x00};
+
+uint8_t ready_value[1]                       = {0x00};
+
+
+const uint8_t uuid_value[1]                 = {0x00};
+static const uint8_t password_value[1]             = {0x00};
+static const uint8_t sys_url_value[1]              = {0x00};
+static const uint8_t sys_uuid_value[1]             = {0x00};
 
 static const uint16_t P_SERVICE_UUID               = ESP_GATT_UUID_PRI_SERVICE;
 static const uint16_t C_DECLARATION_UUID           = ESP_GATT_UUID_CHAR_DECLARE;
@@ -135,8 +145,15 @@ static const uint16_t CC_DECLARATION_UUID          = ESP_GATT_UUID_CHAR_CLIENT_C
 
 uint8_t base_mac_addr[6] = {0};
 
+
+static const uint8_t char_prop_read_write_notify   =  ESP_GATT_CHAR_PROP_BIT_READ | ESP_GATT_CHAR_PROP_BIT_NOTIFY;
+
+
+//uint16_t heart_rate_handle_table[HRS_CONFIG_NB];
+uint16_t gatt_db2_table[HRS_CONFIG_NB];
+
 /* Full Database Description - Add attributes into the database */
-static const esp_gatts_attr_db_t gatt_db[HRS_DEVICE_NB] =
+static const esp_gatts_attr_db_t gatt_db[HRS_CONFIG_NB] =
 {
     // Service Declaration
     [DEVICE_SVC]        =
@@ -193,12 +210,12 @@ static const esp_gatts_attr_db_t gatt_db2[HRS_CONFIG_NB] = {
     /* Characteristic Declaration */
     [CONFIG_CHAR_READY]     =
     {{ESP_GATT_AUTO_RSP}, {ESP_UUID_LEN_16, (uint8_t *)&C_DECLARATION_UUID, ESP_GATT_PERM_READ,
-      CHAR_DECLARATION_SIZE, CHAR_DECLARATION_SIZE, (uint8_t *)&CHAR_PROP_READ_NOTIFY}},
+      CHAR_DECLARATION_SIZE, CHAR_DECLARATION_SIZE, (uint8_t *)&char_prop_read_write_notify}},
 
     /* Characteristic Value */
     [CONFIG_CHAR_VAL_READY] =
     {{ESP_GATT_AUTO_RSP}, {ESP_UUID_LEN_16, (uint8_t *)&GATTS_CHAR_CONFIG_READY, ESP_GATT_PERM_READ | ESP_GATT_PERM_WRITE,
-      GATTS_DEMO_CHAR_VAL_LEN_MAX, sizeof(char_value), (uint8_t *)char_value}},
+      GATTS_DEMO_CHAR_VAL_LEN_MAX, sizeof(ready_value), (uint8_t *)ready_value}},
 
     [CONFIG_CHAR_CFG_READY]  =
     {{ESP_GATT_AUTO_RSP}, {ESP_UUID_LEN_16, (uint8_t *)&CC_DECLARATION_UUID, ESP_GATT_PERM_READ | ESP_GATT_PERM_WRITE,
@@ -212,7 +229,7 @@ static const esp_gatts_attr_db_t gatt_db2[HRS_CONFIG_NB] = {
     /* Characteristic Value */
     [CONFIG_CHAR_VAL_WIFI_SSID] =
     {{ESP_GATT_AUTO_RSP}, {ESP_UUID_LEN_16, (uint8_t *)&GATTS_CHAR_CONFIG_SSID, ESP_GATT_PERM_READ | ESP_GATT_PERM_WRITE,
-      GATTS_DEMO_CHAR_VAL_LEN_MAX, sizeof(char_value), (uint8_t *)char_value}},
+      GATTS_DEMO_CHAR_VAL_LEN_MAX, sizeof(uuid_value), (uint8_t *)uuid_value}},
 
     /* Characteristic Declaration */
     [CONFIG_CHAR_WIFI_PASS]     =
@@ -222,7 +239,7 @@ static const esp_gatts_attr_db_t gatt_db2[HRS_CONFIG_NB] = {
     /* Characteristic Value */
     [CONFIG_CHAR_VAL_WIFI_PASS] =
     {{ESP_GATT_AUTO_RSP}, {ESP_UUID_LEN_16, (uint8_t *)&GATTS_CHAR_CONFIG_PWD, ESP_GATT_PERM_READ | ESP_GATT_PERM_WRITE,
-      GATTS_DEMO_CHAR_VAL_LEN_MAX, sizeof(char_value), (uint8_t *)char_value}},
+      GATTS_DEMO_CHAR_VAL_LEN_MAX, sizeof(password_value), (uint8_t *)password_value}},
 
     /* Characteristic Declaration */
     [CONFIG_CHAR_SYS_URL]     =
@@ -232,17 +249,17 @@ static const esp_gatts_attr_db_t gatt_db2[HRS_CONFIG_NB] = {
     /* Characteristic Value */
     [CONFIG_CHAR_VAL_SYS_URL] =
     {{ESP_GATT_AUTO_RSP}, {ESP_UUID_LEN_16, (uint8_t *)&GATTS_CHAR_CONFIG_URL, ESP_GATT_PERM_READ | ESP_GATT_PERM_WRITE,
-      GATTS_DEMO_CHAR_VAL_LEN_MAX, sizeof(char_value), (uint8_t *)char_value}},
+      GATTS_DEMO_CHAR_VAL_LEN_MAX, sizeof(sys_url_value), (uint8_t *)sys_url_value}},
 
     /* Characteristic Declaration */
     [CONFIG_CHAR_SYS_UUID]     =
     {{ESP_GATT_AUTO_RSP}, {ESP_UUID_LEN_16, (uint8_t *)&C_DECLARATION_UUID, ESP_GATT_PERM_READ,
-      CHAR_DECLARATION_SIZE, CHAR_DECLARATION_SIZE, (uint8_t *)&CHAR_PROP_READ}},
+      CHAR_DECLARATION_SIZE, CHAR_DECLARATION_SIZE, (uint8_t *)&CHAR_PROP_READ_WRITE}},
 
     /* Characteristic Value */
     [CONFIG_CHAR_VAL_SYS_UUID] =
     {{ESP_GATT_AUTO_RSP}, {ESP_UUID_LEN_16, (uint8_t *)&GATTS_CHAR_CONFIG_UUID, ESP_GATT_PERM_READ | ESP_GATT_PERM_WRITE,
-      GATTS_DEMO_CHAR_VAL_LEN_MAX, sizeof(char_value), (uint8_t *)char_value}},
+      GATTS_DEMO_CHAR_VAL_LEN_MAX, sizeof(sys_uuid_value), (uint8_t *)sys_uuid_value}},
 };
 
 /*
@@ -519,8 +536,8 @@ void gatts_profile_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts
             else {
                 ESP_LOGI(TAG_BT_MG, "create attribute table successfully, the number handle = %d\n",param->add_attr_tab.num_handle);
                 
-                memcpy(heart_rate_handle_table, param->add_attr_tab.handles, sizeof(heart_rate_handle_table));
-                esp_ble_gatts_start_service(heart_rate_handle_table[0]);
+                memcpy(gatt_db2_table, param->add_attr_tab.handles, sizeof(gatt_db2_table));
+                esp_ble_gatts_start_service(gatt_db2_table[0]);
             }
             break;
         }
@@ -599,20 +616,99 @@ void gatts_profile_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts
             break;
         }
         case ESP_GATTS_WRITE_EVT: {
+            /*
             ESP_LOGI(TAG_BT_MG, "ESP_GATTS_WRITE_EVT, conn_id %d, trans_id %d, handle %d", param->write.conn_id, param->write.trans_id, param->write.handle);
+
+
+
             if (!param->write.is_prep){
                 ESP_LOGI(TAG_BT_MG, "ESP_GATTS_WRITE_EVT, value len %d", param->write.len);
 
-                char rcv_buffer[param->write.len];
-                strcpy(rcv_buffer,(char*)param->write.value);
-                ESP_LOGI(TAG_BT_MG, "rcv_buffer: %s", rcv_buffer);
+                char write_buffer[param->write.len];
+                strcpy(write_buffer,(char*)param->write.value);
+    
+                if (gatt_db2_table[CONFIG_CHAR_VAL_WIFI_SSID] == param->write.handle) {
+                    ESP_LOGI(TAG_BT_MG, "ssid");
+                    ESP_LOGI(TAG_BT_MG, "write_buffer: %s", write_buffer);
+                }
+                if (gatt_db2_table[CONFIG_CHAR_VAL_WIFI_PASS] == param->write.handle) {
+                    ESP_LOGI(TAG_BT_MG, "pass");
+                    ESP_LOGI(TAG_BT_MG, "write_buffer: %s", write_buffer);
 
-                //parse_bt_json_playload(rcv_buffer);
+                    
+                }
+
+                esp_ble_gatts_set_attr_value(param->write.handle,param->write.len,param->write.value);
+
+
+
 
                 esp_log_buffer_hex(TAG_BT_MG, param->write.value, param->write.len);
             }
             write_event_env(gatts_if, &prepare_write_env, param);
             break;
+            */
+           if (!param->write.is_prep){
+                // the data length of gattc write  must be less than GATTS_DEMO_CHAR_VAL_LEN_MAX.
+                ESP_LOGI(TAG_BT_MG, "GATT_WRITE_EVT, handle = %d, value len = %d, value :", param->write.handle, param->write.len);
+                esp_log_buffer_hex(TAG_BT_MG, param->write.value, param->write.len);
+
+
+                if (gatt_db2_table[CONFIG_CHAR_CFG_READY] == param->write.handle && param->write.len == 2){
+                    uint16_t descr_value = param->write.value[1]<<8 | param->write.value[0];
+                    if (descr_value == 0x0001){
+                        ESP_LOGI(TAG_BT_MG, "notify enable");
+                        uint8_t notify_data[15];
+                        for (int i = 0; i < sizeof(notify_data); ++i)
+                        {
+                            notify_data[i] = i % 0xff;
+                        }
+                        //the size of notify_data[] need less than MTU size
+                        esp_ble_gatts_send_indicate(gatts_if, param->write.conn_id, gatt_db2_table[CONFIG_CHAR_VAL_READY],
+                                                sizeof(notify_data), notify_data, false);
+                    } else if (descr_value == 0x0002){
+                        ESP_LOGI(TAG_BT_MG, "indicate enable");
+                        uint8_t indicate_data[15];
+                        for (int i = 0; i < sizeof(indicate_data); ++i)
+                        {
+                            indicate_data[i] = i % 0xff;
+                        }
+                        //the size of indicate_data[] need less than MTU size
+                        esp_ble_gatts_send_indicate(gatts_if, param->write.conn_id, gatt_db2_table[CONFIG_CHAR_VAL_READY],
+                                            sizeof(indicate_data), indicate_data, true);
+                    } else if (descr_value == 0x0000){
+                        ESP_LOGI(TAG_BT_MG, "notify/indicate disable ");
+                    }else{
+                        ESP_LOGE(TAG_BT_MG, "unknown descr value");
+                        esp_log_buffer_hex(TAG_BT_MG, param->write.value, param->write.len);
+                    }
+
+                } else {
+                    ESP_LOGI(TAG_BT_MG, "CONFIG_CHAR_VAL_READY Test ");
+                   // const uint8_t indicate_data[2] = {0x01, 0x02};
+                   // esp_log_buffer_hex(TAG_BT_MG, indicate_data, sizeof(indicate_data));
+
+                    esp_ble_gatts_set_attr_value(gatt_db2_table[CONFIG_CHAR_VAL_READY],
+                                            param->write.len,  param->write.value);
+
+                    /*esp_ble_gatts_send_indicate(gatts_if, param->write.conn_id, gatt_db2_table[CONFIG_CHAR_VAL_READY],
+                                            sizeof(indicate_data), indicate_data, true);*/
+
+
+                    //esp_ble_gatts_send_response(gatts_if, param->write.conn_id, param->write.trans_id, ESP_GATT_OK, indicate_data);
+                  
+
+                }
+
+                /* send response when param->write.need_rsp is true*/
+                if (param->write.need_rsp){
+                    esp_ble_gatts_send_response(gatts_if, param->write.conn_id, param->write.trans_id, ESP_GATT_OK, NULL);
+                }
+            } else{
+                /* handle prepare write */
+                write_event_env(gatts_if, &prepare_write_env, param);
+            }
+      	    break;
         }
         case ESP_GATTS_EXEC_WRITE_EVT:
             ESP_LOGI(TAG_BT_MG,"ESP_GATTS_EXEC_WRITE_EVT");

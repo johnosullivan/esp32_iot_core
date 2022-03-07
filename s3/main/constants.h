@@ -67,7 +67,7 @@ extern struct mihome_settings_t mihome_settings;
 
 #define MIHOME_VERSION  			"v0.0.1"
 #define MIHOME_STORAGE_NAMESPACE 	"storage"
-#define MIHOME_STORAGE_IS_CONFIG 	"is_configured"
+#define MIHOME_STORAGE_IS_CONFIG 	"configured"
 #define MIHOME_STORAGE_SETTINGS 	"mihome_settings"
 
 #define MIHOME_LED_PIN 		4
