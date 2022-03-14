@@ -12,7 +12,8 @@
     "functional": "c",
     "tuple": "c",
     "type_traits": "c",
-    "utility": "c"
+    "utility": "c",
+    "wifi_manager.h": "c"
   },
   "idf.adapterTargetName": "esp32s3"
 }

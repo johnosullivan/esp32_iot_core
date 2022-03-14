@@ -688,8 +688,7 @@ void gatts_profile_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts
                    // const uint8_t indicate_data[2] = {0x01, 0x02};
                    // esp_log_buffer_hex(TAG_BT_MG, indicate_data, sizeof(indicate_data));
 
-                    esp_ble_gatts_set_attr_value(gatt_db2_table[CONFIG_CHAR_VAL_READY],
-                                            param->write.len,  param->write.value);
+                    esp_ble_gatts_set_attr_value(gatt_db2_table[CONFIG_CHAR_VAL_READY], param->write.len,  param->write.value);
 
                     /*esp_ble_gatts_send_indicate(gatts_if, param->write.conn_id, gatt_db2_table[CONFIG_CHAR_VAL_READY],
                                             sizeof(indicate_data), indicate_data, true);*/
