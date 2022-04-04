@@ -15,6 +15,7 @@
 #include "nvs_flash.h"
 
 #include "bt_manager.h"
+#include "wifi_manager.h"
 
 static const char *TAG_CORE = "mihome_hub_core";
 
@@ -54,7 +55,8 @@ void app_main(void)
             case ESP_OK:
                 ESP_LOGI(TAG_CORE, "configured = %d\n", configured);
                 if (configured) {
-
+                    ESP_LOGI(TAG_CORE, "connect wifi\n");
+                    wifi_manager_start();
                 } else {
                     /* Start BLE Manager / GATTS Service */
                     bt_manager_start();

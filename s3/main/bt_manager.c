@@ -690,6 +690,17 @@ void gatts_profile_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts
 
                     esp_ble_gatts_set_attr_value(gatt_db2_table[CONFIG_CHAR_VAL_READY], param->write.len,  param->write.value);
 
+                    /* Open NVS Storage Namespace */
+                    nvs_handle_t handle;
+                    esp_err_t err = nvs_open(MIHOME_STORAGE_NAMESPACE, NVS_READWRITE, &handle);
+                    ESP_ERROR_CHECK(err);
+
+                    err = nvs_set_i32(handle, MIHOME_STORAGE_IS_CONFIG, 0x01);
+                    ESP_ERROR_CHECK(err);
+                    err = nvs_commit(handle);
+                    ESP_ERROR_CHECK(err);
+
+
                     /*esp_ble_gatts_send_indicate(gatts_if, param->write.conn_id, gatt_db2_table[CONFIG_CHAR_VAL_READY],
                                             sizeof(indicate_data), indicate_data, true);*/
 

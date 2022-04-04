@@ -67,6 +67,45 @@ extern "C" {
  */
 #define JSON_IP_INFO_SIZE 					159
 
+#define DEFAULT_AP_MAX_CONNECTIONS 4
+#define DEFAULT_AP_BEACON_INTERVAL  100
+/**
+ * @brief simplified reason codes for a lost connection.
+ *
+ * esp-idf maintains a big list of reason codes which in practice are useless for most typical application.
+ */
+typedef enum update_reason_code_t {
+	UPDATE_CONNECTION_OK = 0,
+	UPDATE_FAILED_ATTEMPT = 1,
+	UPDATE_USER_DISCONNECT = 2,
+	UPDATE_LOST_CONNECTION = 3
+}update_reason_code_t;
+
+typedef enum connection_request_made_by_code_t{
+	CONNECTION_REQUEST_NONE = 0,
+	CONNECTION_REQUEST_USER = 1,
+	CONNECTION_REQUEST_AUTO_RECONNECT = 2,
+	CONNECTION_REQUEST_RESTORE_CONNECTION = 3,
+	CONNECTION_REQUEST_MAX = 0x7fffffff /*force the creation of this enum as a 32 bit int */
+}connection_request_made_by_code_t;
+
+/**
+ * The actual WiFi settings in use
+ */
+struct wifi_settings_t{
+	uint8_t ap_ssid[MAX_SSID_SIZE];
+	uint8_t ap_pwd[MAX_PASSWORD_SIZE];
+	uint8_t ap_channel;
+	uint8_t ap_ssid_hidden;
+	wifi_bandwidth_t ap_bandwidth;
+	bool sta_only;
+	wifi_ps_type_t sta_power_save;
+	bool sta_static_ip;
+	esp_netif_ip_info_t sta_static_ip_config;
+};
+extern struct wifi_settings_t wifi_settings;
+
+
 /**
  * @brief Structure used to store one message in the queue.
  */
