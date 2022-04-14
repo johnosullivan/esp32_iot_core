@@ -15,7 +15,9 @@
     "utility": "c",
     "wifi_manager.h": "c",
     "*.inc": "c",
-    "ip4_addr.h": "c"
+    "ip4_addr.h": "c",
+    "future": "c",
+    "regex": "c"
   },
   "idf.adapterTargetName": "esp32s3"
 }

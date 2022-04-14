@@ -25,6 +25,15 @@ void system_monitoring_task(void *pvParameter) {
     }
 }
 
+void cb_connection_established(void *pvParameter) {
+	ESP_LOGI(TAG_CORE, "connection_established");
+
+    /*wifi_ap_record_t wifidata;
+    if (esp_wifi_sta_get_ap_info(&wifidata) == 0){
+        ESP_LOGI(TAG_BASE, "wifi_rssi: %d", wifidata.rssi);
+    }*/
+}
+
 void app_main(void)
 {
     /* Print Chip Information */
@@ -57,6 +66,7 @@ void app_main(void)
                 if (configured) {
                     ESP_LOGI(TAG_CORE, "connect wifi\n");
                     wifi_manager_start();
+                    wifi_manager_set_callback(EVENT_STA_GOT_IP, &cb_connection_established);
                 } else {
                     /* Start BLE Manager / GATTS Service */
                     bt_manager_start();
