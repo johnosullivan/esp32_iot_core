@@ -27,11 +27,6 @@ void system_monitoring_task(void *pvParameter) {
 
 void cb_connection_established(void *pvParameter) {
 	ESP_LOGI(TAG_CORE, "connection_established");
-
-    /*wifi_ap_record_t wifidata;
-    if (esp_wifi_sta_get_ap_info(&wifidata) == 0){
-        ESP_LOGI(TAG_BASE, "wifi_rssi: %d", wifidata.rssi);
-    }*/
 }
 
 void app_main(void)
