@@ -23,7 +23,7 @@
 #include "esp_bt_main.h"
 #include "esp_bt_device.h"
 
-static const char *TAG_BT_MG = "mihome_hub_bt_manager";
+static const char *TAG_BT_MG = "esp32_hub_bt_manager";
 
 #define GATTS_DEMO_CHAR_VAL_LEN_MAX 500
 #define PREPARE_BUF_MAX_SIZE        1024

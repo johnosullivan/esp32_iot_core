@@ -17,7 +17,7 @@
 #include "bt_manager.h"
 #include "wifi_manager.h"
 
-static const char *TAG_CORE = "mihome_hub_core";
+static const char *TAG_CORE = "esp32_hub_core";
 
 void system_monitoring_task(void *pvParameter) {
     for(;;) {
