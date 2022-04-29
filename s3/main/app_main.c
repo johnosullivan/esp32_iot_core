@@ -50,11 +50,11 @@ void app_main(void)
     ESP_ERROR_CHECK(err);
 
     int8_t  restart_flag = 0x00;
-    int8_t configured = 0x00;
+    int32_t configured = 0x00;
     if (err != ESP_OK) {
         ESP_LOGE(TAG_CORE, "ERROR: (%s) NVS", esp_err_to_name(err));
     } else {
-        err = nvs_get_i8(handle, MIHOME_STORAGE_IS_CONFIG, &configured);
+        err = nvs_get_i32(handle, MIHOME_STORAGE_IS_CONFIG, &configured);
         switch (err) {
             case ESP_OK:
                 ESP_LOGI(TAG_CORE, "configured = %d\n", configured);
