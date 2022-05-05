@@ -17,7 +17,10 @@
     "*.inc": "c",
     "ip4_addr.h": "c",
     "future": "c",
-    "regex": "c"
+    "regex": "c",
+    "esp_gatt_common_api.h": "c",
+    "sys.h": "c",
+    "err.h": "c"
   },
   "idf.adapterTargetName": "esp32s3"
 }

@@ -2,26 +2,26 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "freertos/event_groups.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
 #include "sdkconfig.h"
-
-#include "freertos/event_groups.h"
 
 #include "esp_wifi.h"
 #include "esp_log.h"
 #include "esp_event.h"
 #include "nvs_flash.h"
 #include "esp_system.h"
+#include "esp_bt_main.h"
+#include "esp_bt_device.h"
 
 #include "lwip/err.h"
 #include "lwip/sys.h"
 #include "esp_gatt_common_api.h"
+
 #include "bt_manager.h"
-	
-#include "esp_bt_main.h"
-#include "esp_bt_device.h"
+
 
 static const char *TAG_BT_MG = "esp32_hub_bt_manager";
 
