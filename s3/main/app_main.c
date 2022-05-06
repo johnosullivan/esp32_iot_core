@@ -1,19 +1,17 @@
 #include <stdio.h>
 #include "sdkconfig.h"
 
+#include "nvs.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "esp_log.h"
+#include "esp_event.h"
+#include "nvs_flash.h"
 #include "esp_system.h"
 #include "esp_spi_flash.h"
 
 #include "utils.h"
-
-#include "nvs.h"
-#include "esp_log.h"
-#include "esp_event.h"
-#include "nvs_flash.h"
-
 #include "bt_manager.h"
 #include "wifi_manager.h"
 
@@ -50,7 +48,8 @@ void app_main(void)
     ESP_ERROR_CHECK(err);
 
     int8_t  restart_flag = 0x00;
-    int32_t configured = 0x00;
+    int32_t configured   = 0x00;
+    
     if (err != ESP_OK) {
         ESP_LOGE(TAG_CORE, "ERROR: (%s) NVS", esp_err_to_name(err));
     } else {
