@@ -32,7 +32,10 @@ void app_main(void)
     /* Print Chip Information */
     esp_chip_info_t chip_info;
     esp_chip_info(&chip_info);
-    printf("[Target: %s] - %d CPU Core(s), WiFi%s%s, SR %d, %dMB %s Flash\n", CONFIG_IDF_TARGET, chip_info.cores, (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "", (chip_info.features & CHIP_FEATURE_BLE) ? "/BLE" : "", chip_info.revision, spi_flash_get_chip_size() / (1024 * 1024), (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "Embedded" : "External");
+    printf("[Target: %s] - %d CPU Core(s), WiFi%s%s, SR %d, %dMB %s Flash\n", 
+            CONFIG_IDF_TARGET, chip_info.cores, (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "", 
+            (chip_info.features & CHIP_FEATURE_BLE) ? "/BLE" : "", chip_info.revision, spi_flash_get_chip_size() / (1024 * 1024), 
+            (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "Embedded" : "External");
     
     /* Initialize NVS */
     esp_err_t err = nvs_flash_init();
@@ -47,18 +50,19 @@ void app_main(void)
     err = nvs_open(MIHOME_STORAGE_NAMESPACE, NVS_READWRITE, &handle);
     ESP_ERROR_CHECK(err);
 
+    /* Pull NVS State + Start BLE/WiFi Managers */
     int8_t  restart_flag = 0x00;
     int32_t configured   = 0x00;
-    
+
     if (err != ESP_OK) {
         ESP_LOGE(TAG_CORE, "ERROR: (%s) NVS", esp_err_to_name(err));
     } else {
         err = nvs_get_i32(handle, MIHOME_STORAGE_IS_CONFIG, &configured);
         switch (err) {
             case ESP_OK:
-                ESP_LOGI(TAG_CORE, "configured = %d\n", configured);
+                ESP_LOGD(TAG_CORE, "MIHOME_STORAGE_IS_CONFIG = %d\n", configured);
                 if (configured) {
-                    ESP_LOGI(TAG_CORE, "connect wifi\n");
+                    /* Start WiFi Manager + Callback (EVENT_STA_GOT_IP) */
                     wifi_manager_start();
                     wifi_manager_set_callback(EVENT_STA_GOT_IP, &cb_connection_established);
                 } else {
@@ -67,8 +71,10 @@ void app_main(void)
                 }
                 break;
             case ESP_ERR_NVS_NOT_FOUND:
+                /* Set NVS Default Configs */
                 err = nvs_set_i32(handle, MIHOME_STORAGE_IS_CONFIG, 0x00);
                 ESP_ERROR_CHECK(err);
+                /* Commit NVS Changes */
                 err = nvs_commit(handle);
                 ESP_ERROR_CHECK(err);
                 restart_flag = 0x01;
@@ -80,6 +86,7 @@ void app_main(void)
     /* Close NVS Handle */
     nvs_close(handle);
 
+    /* Restart Flag Equals 0x01 */
     if (restart_flag) {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
         esp_restart();

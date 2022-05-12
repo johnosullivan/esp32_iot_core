@@ -20,7 +20,9 @@
     "regex": "c",
     "esp_gatt_common_api.h": "c",
     "sys.h": "c",
-    "err.h": "c"
+    "err.h": "c",
+    "task.h": "c",
+    "freertos.h": "c"
   },
   "idf.adapterTargetName": "esp32s3"
 }

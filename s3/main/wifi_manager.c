@@ -32,7 +32,7 @@
 
 /* objects used to manipulate the main queue of events */
 QueueHandle_t wifi_manager_queue;
-SemaphoreHandle_t wifi_manager_json_mutex = NULL;
+SemaphoreHandle_t wifi_manager_json_mutex 	= NULL;
 SemaphoreHandle_t wifi_manager_sta_ip_mutex = NULL;
 
 char *wifi_manager_sta_ip = NULL;
@@ -46,7 +46,7 @@ wifi_config_t* wifi_manager_config_sta = NULL;
 void (**cb_ptr_arr)(void*) = NULL;
 
 /* @brief tag used for ESP serial console messages */
-static const char TAG[] = "mihome_esp32_wifi_manager";
+static const char TAG[] = "esp32_wifi_manager";
 
 /* @brief task handle for the main wifi_manager task */
 static TaskHandle_t task_wifi_manager = NULL;
@@ -195,7 +195,7 @@ BaseType_t wifi_manager_send_message(message_code_t code, void *param){
 
 bool wifi_manager_lock_sta_ip_string(TickType_t xTicksToWait) {
 	if(wifi_manager_sta_ip_mutex){
-		if( xSemaphoreTake( wifi_manager_sta_ip_mutex, xTicksToWait ) == pdTRUE ) {
+		if(xSemaphoreTake(wifi_manager_sta_ip_mutex, xTicksToWait) == pdTRUE) {
 			return true;
 		} else{
 			return false;

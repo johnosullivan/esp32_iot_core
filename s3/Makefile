@@ -3,6 +3,6 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := mihome-hub
+PROJECT_NAME := esp32-hub
 
 include $(IDF_PATH)/make/project.mk

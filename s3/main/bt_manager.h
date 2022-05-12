@@ -5,7 +5,6 @@
 extern "C" {
 #endif
 
-// bluetooth 
 #include "esp_bt.h"
 #include "esp_gap_ble_api.h"
 #include "esp_gatts_api.h"
@@ -21,13 +20,10 @@ typedef struct {
 } prepare_type_env_t;
 
 /*
-    PROFILES COUNT #1
+    PROFILES COUNT #2
 
     1) PROFILE_APP_ID_1 = ID: 0
-
-        SERVICES: 
-            GATTS_SERVICE_UUID_DEVICE - 0x1000 - Device (Read-Only)
-            - 1) GATTS_CHAR_UUID_DEVICE_NAME 0x1001
+    1) PROFILE_APP_ID_1 = ID: 0
 
 
 */
@@ -39,17 +35,12 @@ typedef struct {
 #define GATTS_SERVICE_DEVICE_UUID   		0x00FF
 #define GATTS_CHAR_DEVICE_NAME_UUID      	0xFF01
 #define GATTS_CHAR_DEVICE_MIOS_UUID      	0xFF02
-
-
-
 #define GATTS_SERVICE_CONFIG_UUID 		0x2000
-
-
 
 #define GATTS_NUM_HANDLE     		4
 #define GATTS_CHAR_VAL_LEN_MAX 		0x40
 #define PREPARE_BUF_MAX_SIZE 		1024
-
+#define CHAR_DECLARATION_SIZE       (sizeof(uint8_t))
 
 
 /* Attributes State Machine */
@@ -90,9 +81,6 @@ enum {
 
     HRS_CONFIG_NB
 };
-
-
-
 
 #define adv_config_flag      		(1 << 0)
 #define scan_rsp_config_flag 		(1 << 1)
