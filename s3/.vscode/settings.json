@@ -22,7 +22,10 @@
     "sys.h": "c",
     "err.h": "c",
     "task.h": "c",
-    "freertos.h": "c"
+    "freertos.h": "c",
+    "utils.h": "c",
+    "string": "c",
+    "string_view": "c"
   },
   "idf.adapterTargetName": "esp32s3"
 }
